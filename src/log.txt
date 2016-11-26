@@ -1,0 +1,48 @@
+<> New Message
+<> Timestamp	2016-11-27 00:29:23.72
+<> Content		hallo
+
+<> New Message from Ferdinand
+<> Timestamp	2016-11-27 00:29:27.287
+<> Content		hallo
+
+<> New Message from Ferdinand
+<> Timestamp	2016-11-27 00:29:32.629
+<> Content		Meine Nachricht
+
+<> New Message from Yoshio
+<> Timestamp	2016-11-27 00:29:39.676
+<> Content		Was is los
+
+<> New Message from Yoshio
+<> Timestamp	2016-11-27 00:29:39.676
+<> Content		Was is los
+
+<> New Message
+<> Timestamp	2016-11-27 00:33:03.71
+<> Content		hallo
+
+<> New Message from Brett
+<> Timestamp	2016-11-27 00:33:11.672
+<> Content		hallo
+
+<> New Message from Brett
+<> Timestamp	2016-11-27 00:33:11.672
+<> Content		hallo
+
+<> New Message from Brett
+<> Timestamp	2016-11-27 00:33:11.672
+<> Content		hallo
+
+<> New Message from Audra
+<> Timestamp	2016-11-27 00:33:18.132
+<> Content		woie gehts dir 
+
+<> New Message from Audra
+<> Timestamp	2016-11-27 00:33:18.132
+<> Content		woie gehts dir 
+
+<> New Message from Audra
+<> Timestamp	2016-11-27 00:33:18.132
+<> Content		woie gehts dir 
+
