@@ -5,6 +5,7 @@ import client.Message;
 import java.io.*;
 import java.net.ServerSocket;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -90,8 +91,10 @@ public class server {
 
     public synchronized static void log(Message msg) {
         File file = new File("src/log.txt");
+        System.out.println(file.length());
+        boolean append = file.length() >= 1000 ? false : true;
         try (
-                FileOutputStream fout = new FileOutputStream(file,true);
+                FileOutputStream fout = new FileOutputStream(file,append);
         ) {
             if (!file.exists()) {
                 file.createNewFile();
@@ -108,5 +111,20 @@ public class server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public synchronized static Message<String>  readLog() {
+        Message<String> res = new Message<String>("");
+        try {
+            Scanner s = new Scanner(new File("src/log.txt"));
+            String out = "\n--------------------\nServer Logs:\n--------------------\n\t";
+            while (s.hasNext()) {
+                out += s.nextLine() + "\n\t";
+            }
+            res.setMessage(out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 }

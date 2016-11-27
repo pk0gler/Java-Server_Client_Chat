@@ -4,6 +4,7 @@ import client.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -58,11 +59,14 @@ public class ClientThread extends Thread {
                     break;
                 }
 
-                //outputLine = inputLine;
-                //outputLine.setUsr(this.usrName);
-                //out.writeObject(outputLine);
                 inputLine.setUsr(this.usrName);
                 this.msgs.add(inputLine);
+
+                if (inputLine.getCommand().equals("log")) {
+                    Message<String> temp = new Message(server.readLog());
+                    temp.setUsr("Server");
+                    out.writeObject(temp);
+                }
             }
         } catch (IOException e) {
             System.out.println(this.usrName + " ist disconnected");

@@ -23,10 +23,6 @@ public class client {
             new MessageThread(in).start();
 
             while (true) {
-                //System.out.println(fromServer);
-                //if (fromServer.equals("Bye."))
-                //    break;
-
                 fromUser = new Message(stdIn.readLine());
                 System.out.println();
                 if (fromUser.getMessage() != null) {
@@ -40,15 +36,20 @@ public class client {
                         String nname = stdIn.readLine();
                         System.out.println();
                         Person p = new Person(vname, nname);
-                        Message<Person> temp = new Message<>(p);
+                        //Message<Person> temp = new Message<>(new Message("as"));
+                        Message<Person> temp = new Message<Person>(p);
                         out.writeObject(temp);
                     } else if (fromUser.getMessage().equals("\\help")) {
                         System.out.println(
                                 "Commands:\n\t\\help -> Show this Message\n\t" +
-                                "\\exit -> Close / Disconnect\n\t" +
-                                "\\person -> Create new Person\n\t"
+                                        "\\exit -> Close / Disconnect\n\t" +
+                                        "\\person -> Create new Person\n\t"
                         );
                         out.writeObject(new Message("Someone invoked help"));
+                    } else if (fromUser.getMessage().equals("\\showLog")) {
+                        Message temp = new Message("Someone is sowing log history o.0");
+                        temp.setCommand("log");
+                        out.writeObject(temp);
                     } else {
                         out.writeObject(fromUser);
                     }

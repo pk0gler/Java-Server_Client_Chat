@@ -11,6 +11,7 @@ public class Message<E> implements Serializable {
     private E message;
     private Timestamp timestamp;
     private String usr = "";
+    private String command = "";
 
 
     public Message(E message) {
@@ -21,16 +22,24 @@ public class Message<E> implements Serializable {
 
     @Override
     public String toString() {
-        return (this.usr.equals("")) ?
-                "<> New Message" + "\n" +
-                        "<> Timestamp\t" + this.timestamp + "\n" +
-                        "<> Content\t\t" + this.message.toString() + "\n"
+        String output = "";
+        if (!this.usr.equals("Server")) {
+            output = (this.usr.equals("")) ?
+                    "<> New Message" + "\n" +
+                            "<> Timestamp\t" + this.timestamp + "\n" +
+                            "<> Content\t\t" + this.message.toString() + "\n"
 
-                :
+                    :
 
-                "<> New Message from " + this.usr + "\n" +
-                        "<> Timestamp\t" + this.timestamp + "\n" +
-                        "<> Content\t\t" + this.message.toString() + "\n";
+                    "<> New Message from " + this.usr + "\n" +
+                            "<> Timestamp\t" + this.timestamp + "\n" +
+                            "<> Content\t\t" + this.message.toString() + "\n";
+        } else {
+            output = "<<>> New Message" + "\n" +
+                    "<<>> Timestamp\t" + this.timestamp + "\n" +
+                    "<<>> Content\t\t" + this.message.toString() + "\n";
+        }
+        return output;
     }
 
     public E getMessage() {
@@ -55,5 +64,13 @@ public class Message<E> implements Serializable {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
     }
 }
