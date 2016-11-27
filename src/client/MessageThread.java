@@ -1,15 +1,19 @@
 package client;
 
+import streamDecorater.ChatStream;
+import streamDecorater.CoreChatStream;
+
 import java.io.*;
 
 /**
  * Created by pkogler on 26/11/2016.
  */
 public class MessageThread extends Thread {
-    private ObjectInput input;
+    //private ObjectInput input;
+    private ChatStream stream;
 
-    public MessageThread(ObjectInput input) {
-        this.input = input;
+    public MessageThread(ChatStream stream) {
+        this.stream = stream;
     }
 
     /**
@@ -27,7 +31,7 @@ public class MessageThread extends Thread {
     public void run() {
         while (true) {
             try {
-                System.out.println(this.input.readObject());
+                System.out.println(this.stream.read());
             } catch (IOException e) {
                 System.out.println("Client closed connection via \\exit\n" +
                         "Or Server closed down Socket Connection");

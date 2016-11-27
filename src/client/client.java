@@ -1,5 +1,9 @@
 package client;
 
+import streamDecorater.ChatStream;
+import streamDecorater.CoreChatStream;
+import streamDecorater.SmileDecorator;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -13,14 +17,16 @@ public class client {
                 Socket kkSocket = new Socket("localhost", 4444);
                 //PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
                 //BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
-                ObjectOutput out = new ObjectOutputStream(kkSocket.getOutputStream());
-                ObjectInput in = new ObjectInputStream(kkSocket.getInputStream())
+                //ObjectOutput out = new ObjectOutputStream(kkSocket.getOutputStream());
+                //ObjectInput in = new ObjectInputStream(kkSocket.getInputStream())
+                ChatStream stream = new SmileDecorator(new CoreChatStream(kkSocket));
         ) {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             Object fromServer;
             Message fromUser;
 
-            new MessageThread(in).start();
+            //new MessageThread(in).start();
+            new MessageThread(stream).start();
 
             while (true) {
                 fromUser = new Message(stdIn.readLine());
@@ -38,20 +44,24 @@ public class client {
                         Person p = new Person(vname, nname);
                         //Message<Person> temp = new Message<>(new Message("as"));
                         Message<Person> temp = new Message<Person>(p);
-                        out.writeObject(temp);
+                        //out.writeObject(temp);
+                        stream.write(temp);
                     } else if (fromUser.getMessage().equals("\\help")) {
                         System.out.println(
                                 "Commands:\n\t\\help -> Show this Message\n\t" +
                                         "\\exit -> Close / Disconnect\n\t" +
                                         "\\person -> Create new Person\n\t"
                         );
-                        out.writeObject(new Message("Someone invoked help"));
+                        //out.writeObject(new Message("Someone invoked help"));
+                        stream.write(new Message("Someone invoked help"));
                     } else if (fromUser.getMessage().equals("\\showLog")) {
                         Message temp = new Message("Someone is sowing log history o.0");
                         temp.setCommand("log");
-                        out.writeObject(temp);
+                        //out.writeObject(temp);
+                        stream.write(temp);
                     } else {
-                        out.writeObject(fromUser);
+                        //out.writeObject(fromUser);
+                        stream.write(fromUser);
                     }
                 }
             }
@@ -61,6 +71,8 @@ public class client {
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to ");
             System.exit(1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

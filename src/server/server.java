@@ -4,6 +4,8 @@ import client.Message;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by pkogler on 26/11/2016.
  */
 public class server {
+    private static final URL url = server.class.getClass().getResource("/server/log.txt");
     private static String[] usrnames = new String[]{
             "Kaitlin",
             "Francesca",
@@ -90,17 +93,16 @@ public class server {
     }
 
     public synchronized static void log(Message msg) {
-        File file = new File("src/log.txt");
-        System.out.println(file.length());
+        File file = new File(System.getProperty("user.dir")+"/log.txt");
         boolean append = file.length() >= 1000 ? false : true;
         try (
-                FileOutputStream fout = new FileOutputStream(file,append);
+                FileOutputStream fout = new FileOutputStream(file, append);
         ) {
             if (!file.exists()) {
                 file.createNewFile();
             }
 
-            String temp = msg.toString()+"\n";
+            String temp = msg.toString() + "\n";
             byte[] msgBytes = temp.getBytes();
 
             fout.write(msgBytes);
@@ -113,10 +115,11 @@ public class server {
         }
     }
 
-    public synchronized static Message<String>  readLog() {
+    public synchronized static Message<String> readLog() {
         Message<String> res = new Message<String>("");
         try {
-            Scanner s = new Scanner(new File("src/log.txt"));
+            //Scanner s = new Scanner(new File("src/log.txt"));
+            Scanner s = new Scanner(new File(System.getProperty("user.dir")+"/log.txt"));
             String out = "\n--------------------\nServer Logs:\n--------------------\n\t";
             while (s.hasNext()) {
                 out += s.nextLine() + "\n\t";
