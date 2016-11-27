@@ -1,27 +1,57 @@
 package streamDecorater;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 
 /**
  * Created by philippkogler on 27/11/16.
+ * CoreChat Stream simple chatstream functionality
  */
-public class StreamDecorator extends ChatStream {
-    private ChatStream inner;
+public class CoreChatStream extends ChatStream {
+    /**
+     * Output
+     */
+    private ObjectOutput out;
+    /**
+     * Input
+     */
+    private ObjectInput in;
 
-    public StreamDecorator(ChatStream inner) {
-        this.inner = inner;
+    /**
+     * {@link CoreChatStream} Constructor
+     *
+     * @param socket
+     * @throws IOException
+     */
+    public CoreChatStream(Socket socket) throws IOException {
+        this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.in = new ObjectInputStream(socket.getInputStream());
     }
 
+
+    /**
+     * Read from an InputStream
+     *
+     * @return @{@link Object} read Object
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @Override
     public Object read() throws IOException, ClassNotFoundException {
-        return this.inner.read();
+        return this.in.readObject();
     }
 
+    /**
+     * Write to an OutputStream
+     *
+     * @param o @{@link Object} Object to write
+     * @throws IOException
+     */
     @Override
     public void write(Object o) throws IOException {
-        this.inner.write(o);
+        this.out.writeObject(o);
     }
+
 
     /**
      * Closes this resource, relinquishing any underlying resources.
@@ -70,6 +100,7 @@ public class StreamDecorator extends ChatStream {
      */
     @Override
     public void close() throws Exception {
-        this.inner.close();
+        this.out.close();
+        this.in.close();
     }
 }

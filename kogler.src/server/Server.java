@@ -4,7 +4,6 @@ import client.Message;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,9 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by pkogler on 26/11/2016.
+ * Server Socket
+ * Distributes Clients and creates its Threads
  */
-public class server {
-    private static final URL url = server.class.getClass().getResource("/server/log.txt");
+public class Server {
+    /**
+     * SERVER Usage
+     */
+    private static final String SERVER_USAGE = "USAGE\n\tjava -jar server.jar <port>";
+    /**
+     * Random User Names
+     */
     private static String[] usrnames = new String[]{
             "Kaitlin",
             "Francesca",
@@ -63,18 +70,48 @@ public class server {
             "Sandra",
             "Zachery",
             "Edward"};
+    private boolean listening;
 
-    public static void main(String[] args) {
+    /**
+     * Server Constructor
+     * Pasrses cli arguments
+     * Initiates server connection
+     *
+     * @param args
+     */
+    public Server(String[] args) {
+        if (args.length != 1) {
+            System.err.println(SERVER_USAGE);
+            System.exit(1);
+        }
 
-        boolean listening = true;
+        int port = 0;
 
+        try {
+            port = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid Port not a number");
+            System.err.println(SERVER_USAGE);
+        }
+
+        this.listening = true;
+        this.initiateServerChat(port);
+    }
+
+    /**
+     * Initiating Server Chat
+     * Creates Client Threads
+     *
+     * @param port
+     */
+    private void initiateServerChat(int port) {
         System.out.println(
                 "+---------------------------------------------------+\n" +
-                        "|  Server is now running and listening on Port ...  |\n" +
+                        "|  Server is now running and listening on Port "+port+"  |\n" +
                         "+---------------------------------------------------+\n"
         );
 
-        try (ServerSocket serverSocket = new ServerSocket(4444)) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
 
             ConcurrentHashMap<String, ClientThread> clients = new ConcurrentHashMap<>();
             AllocationService allocationService = new AllocationService(clients);
@@ -92,6 +129,12 @@ public class server {
         }
     }
 
+    /**
+     * Writing to log File
+     * Thread safe Method when multiple Threads want to log
+     *
+     * @param msg @{@link Message}
+     */
     public synchronized static void log(Message msg) {
         File file = new File(System.getProperty("user.dir")+"/log.txt");
         boolean append = file.length() >= 1000 ? false : true;
@@ -115,6 +158,12 @@ public class server {
         }
     }
 
+    /**
+     * Read Log file
+     * when a client wants to see the Log File
+     *
+     * @return @{@link Message}
+     */
     public synchronized static Message<String> readLog() {
         Message<String> res = new Message<String>("");
         try {
@@ -129,5 +178,15 @@ public class server {
             e.printStackTrace();
         }
         return res;
+    }
+
+    /**
+     * Main Method
+     * Creates a new Server
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        Server s = new Server(args);
     }
 }
