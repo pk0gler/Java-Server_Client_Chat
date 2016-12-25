@@ -4,7 +4,6 @@ import client.Message;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.stream.Stream;
 
 /**
  * Created by pkogler on 25/12/2016.
@@ -27,7 +26,7 @@ public class Base64Decorator extends StreamDecorator {
      * @param o @{@link Object} Object to write
      * @throws IOException
      * @see ChatStream
-     *
+     * <p>
      * Write to inner {@link java.io.OutputStream} with encrypted {@link com.sun.xml.internal.org.jvnet.staxex.Base64Encoder}
      */
     @Override
@@ -46,13 +45,8 @@ public class Base64Decorator extends StreamDecorator {
      */
     @Override
     public Object read() throws IOException, ClassNotFoundException {
-        try {
-            byte[] msg = ((String) super.read()).getBytes();
-            byte[] decodedBytes = Base64.getDecoder().decode(msg);
-            return new Message<String>(new String(decodedBytes));
-        } catch (NullPointerException e) {
-            System.out.println("Server closed down");
-        }
-        return null;
+        byte[] msg = ((String) super.read()).getBytes();
+        byte[] decodedBytes = Base64.getDecoder().decode(msg);
+        return new Message<String>(new String(decodedBytes));
     }
 }

@@ -39,6 +39,9 @@ public class MessageThread extends Thread {
                 break;
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+            } catch (NullPointerException e) {
+                System.out.printf("Server closed down Connection");
+                System.exit(0);
             }
         }
     }

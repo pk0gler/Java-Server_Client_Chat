@@ -112,24 +112,28 @@ public class ClientThread extends Thread {
 
 
             //while ((inputLine = (Message) in.readObject()) != null) {
-            while ((inputLine = (Message) stream.read()) != null) {
-                if (inputLine.equals("\\exit")) {
-                    break;
-                }
+            try {
+                while ((inputLine = (Message) stream.read()) != null) {
+                    if (inputLine.equals("\\exit")) {
+                        break;
+                    }
 
-                if (inputLine.getCommand().equals("log")) {
-                    inputLine.setUsr("Server");
-                } else {
-                    inputLine.setUsr(this.usrName);
-                }
-                this.msgs.add(inputLine);
+                    if (inputLine.getCommand().equals("log")) {
+                        inputLine.setUsr("Server");
+                    } else {
+                        inputLine.setUsr(this.usrName);
+                    }
+                    this.msgs.add(inputLine);
 
-                if (inputLine.getCommand().equals("log")) {
-                    Message<String> temp = new Message(Server.readLog());
-                    temp.setUsr("Server");
-                    //out.writeObject(temp);
-                    stream.write(temp);
+                    if (inputLine.getCommand().equals("log")) {
+                        Message<String> temp = new Message(Server.readLog());
+                        temp.setUsr("Server");
+                        //out.writeObject(temp);
+                        stream.write(temp);
+                    }
                 }
+            } catch (NullPointerException e) {
+                System.out.println("Client " + usrName + " closed down connection");
             }
         } catch (IOException e) {
             System.out.println(this.usrName + " ist disconnected\n");
