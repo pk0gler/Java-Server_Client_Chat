@@ -30,7 +30,7 @@ public class SmileDecorator extends StreamDecorator {
     @Override
     public void write(Object o) throws IOException {
         String msg = ((Message<String>) o).getMessage();
-        String res = msg + ":)";
+        String res = msg + " :)";
         this.inner.write(new Message<String>(res));
     }
 }

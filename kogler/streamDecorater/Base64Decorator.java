@@ -3,6 +3,7 @@ package streamDecorater;
 import client.Message;
 
 import java.io.IOException;
+import java.io.ObjectOutput;
 import java.util.Base64;
 
 /**
@@ -34,7 +35,9 @@ public class Base64Decorator extends StreamDecorator {
         byte[] msg = ((Message<String>) o).getMessage().getBytes();
         byte[] encodedMsg = Base64.getEncoder().encode(msg);
         System.out.println("base64 encoded Message: " + new String(encodedMsg));
-        this.inner.write(new Message(new String(encodedMsg)));
+        Message<String> old = (Message<String>)o;
+        old.setMessage(new String(encodedMsg));
+        this.inner.write(old);
     }
 
     /**
@@ -45,8 +48,11 @@ public class Base64Decorator extends StreamDecorator {
      */
     @Override
     public Object read() throws IOException, ClassNotFoundException {
-        byte[] msg = ((String) super.read()).getBytes();
+        Message<String> a = (Message<String>) super.read();
+        byte[] msg = a.getMessage().getBytes();
         byte[] decodedBytes = Base64.getDecoder().decode(msg);
-        return new Message<String>(new String(decodedBytes));
+        a.setMessage(new String(decodedBytes));
+        return a;
+
     }
 }

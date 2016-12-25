@@ -135,7 +135,8 @@ public class Server {
      *
      * @param msg @{@link Message}
      */
-    public synchronized static void log(Message msg) {
+    public synchronized static String log(Message msg) {
+        String temp = "";
         File file = new File(System.getProperty("user.dir")+"/log.txt");
         boolean append = file.length() >= 1000 ? false : true;
         try (
@@ -145,7 +146,7 @@ public class Server {
                 file.createNewFile();
             }
 
-            String temp = msg.toString() + "\n";
+            temp = msg.toString() + "\n";
             byte[] msgBytes = temp.getBytes();
 
             fout.write(msgBytes);
@@ -156,6 +157,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return  temp;
     }
 
     /**

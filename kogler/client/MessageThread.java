@@ -31,7 +31,7 @@ public class MessageThread extends Thread {
     public void run() {
         while (true) {
             try {
-                System.out.println(this.stream.read());
+                System.out.print(this.stream.read());
             } catch (IOException e) {
                 System.out.println("Client closed connection via \\exit\n" +
                         "Or Server closed down Socket Connection");

@@ -1,6 +1,9 @@
 package client;
 
-import streamDecorater.*;
+import streamDecorater.AESDecorator;
+import streamDecorater.Base64Decorator;
+import streamDecorater.ChatStream;
+import streamDecorater.CoreChatStream;
 
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -29,12 +32,25 @@ public class Client {
     /**
      * {@link SecretKeySpec}
      */
-    private SecretKeySpec skeySpec;
+    public static SecretKeySpec skeySpec;
 
     /**
      * {@link IvParameterSpec}
      */
-    private IvParameterSpec iv;
+    public static IvParameterSpec iv;
+
+    static {
+        /*
+         * Create SecretKeySpec
+         * for later use in AESDecorator
+         */
+        try {
+            iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
+            skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Cient Constructor
@@ -73,16 +89,6 @@ public class Client {
             }
         }
 
-        /*
-         * Create SecretKeySpec
-         * for later use in AESDecorator
-         */
-        try {
-            this.iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
-            this.skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
 
         // Initiate Socket
         this.initiateClientChat(ipAddr, port);
@@ -109,13 +115,13 @@ public class Client {
                 // Create Stream
                 // Decorate with varies of streamDecorater.StreamDecorator
                 ChatStream stream =
-                        new SmileDecorator(
-                                new Base64Decorator(
-                                        new AESDecorator(
-                                                new CoreChatStream(socket),
-                                                this.skeySpec, this.iv)
+                        new Base64Decorator(
+                                new AESDecorator(
+                                        new CoreChatStream(socket),
+                                        skeySpec,
+                                        iv
                                 )
-                        );
+                        )
         ) {
             // Client input via Console
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -126,7 +132,7 @@ public class Client {
 
             while (true) {
                 fromUser = new Message(stdIn.readLine());
-                System.out.println();
+                System.out.println("\n");
                 if (fromUser.getMessage() != null) {
                     if (fromUser.getMessage().equals("\\exit")) {
                         System.out.println("Ciau");

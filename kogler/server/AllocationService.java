@@ -64,11 +64,18 @@ public class AllocationService extends Thread {
         while (true) {
             if (this.msgs.size() != 0) {
                 Message msg = msgs.remove();
-                Server.log(msg);
+                String temp = msg.toString();
+                //Server.log(msg);
+                int i=1;
                 for (Map.Entry<String, ClientThread> entry : this.clients.entrySet()) {
-                    entry.getValue().setNewMsg(msg);
+                    Message<String> newMsg = new Message(temp);
+                    newMsg.setUsr(msg.getUsr());
+                    newMsg.setTimestamp(msg.getTimestamp());
+                    newMsg.setCommand(msg.getCommand());
+                    entry.getValue().setNewMsg(newMsg);
+                    i++;
                 }
-                System.out.println(msg);
+                System.out.println(temp);
             }
         }
     }

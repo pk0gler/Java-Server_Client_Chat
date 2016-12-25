@@ -1,15 +1,13 @@
 package server;
 
+import client.Client;
 import client.Message;
 import streamDecorater.AESDecorator;
 import streamDecorater.Base64Decorator;
 import streamDecorater.ChatStream;
 import streamDecorater.CoreChatStream;
 
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -20,8 +18,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * It will handle the communication with that client
  */
 public class ClientThread extends Thread {
-    private SecretKeySpec skeySpec;
-    private IvParameterSpec iv;
     /**
      * Client
      */
@@ -55,17 +51,6 @@ public class ClientThread extends Thread {
                         "           New User\t>> " + usrName + " <<\tconnected\n" +
                         "+------------------------------------------------------------+\n"
         );
-
-        /*
-         * Create SecretKeySpec
-         * for later use in AESDecorator
-         */
-        try {
-            this.iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
-            this.skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -87,10 +72,12 @@ public class ClientThread extends Thread {
                 ChatStream stream =
                         new Base64Decorator(
                                 new AESDecorator(
-                                        new CoreChatStream(this.client),
-                                        this.skeySpec, this.iv)
 
-                        );
+                                        new CoreChatStream(this.client),
+                                        Client.skeySpec,
+                                        Client.iv
+                                )
+                        )
         ) {
 
             Message inputLine, outputLine;
@@ -105,7 +92,7 @@ public class ClientThread extends Thread {
             outputLine = new Message("Hallo " + this.usrName);
             outputLine.setUsr("Server");
             //out.writeObject(outputLine);
-            stream.write(outputLine);
+            //stream.write(outputLine);
             outputLine = new Message("User " + this.usrName + " connected");
             outputLine.setUsr("Server");
             this.msgs.add(outputLine);

@@ -62,9 +62,8 @@ public class AESDecorator extends StreamDecorator {
 
             byte[] encrypted = cipher.doFinal(temp.getMessage().getBytes());
             System.out.println("encrypted string AES: " + Base64.encodeBase64String(encrypted));
-
-            this.inner.write(new Message<String>(Base64.encodeBase64String(encrypted)));
-
+            temp.setMessage(Base64.encodeBase64String(encrypted));
+            this.inner.write(temp);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -88,12 +87,13 @@ public class AESDecorator extends StreamDecorator {
      */
     @Override
     public Object read() throws IOException, ClassNotFoundException {
+        Message<String> a = ((Message<String>) super.read());
         try {
             this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey, this.iv);
-            String enc = ((Message<String>) super.read()).getMessage();
+            String enc = a.getMessage();
             byte[] original = this.cipher.doFinal(Base64.decodeBase64(enc));
-
-            return (new String(original));
+            a.setMessage(new String(original));
+            return a;
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
