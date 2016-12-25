@@ -38,6 +38,7 @@ public class CoreChatStream extends ChatStream {
      */
     @Override
     public Object read() throws IOException, ClassNotFoundException {
+        System.out.println();
         return this.in.readObject();
     }
 
@@ -102,5 +103,21 @@ public class CoreChatStream extends ChatStream {
     public void close() throws Exception {
         this.out.close();
         this.in.close();
+    }
+
+    public ObjectOutput getOut() {
+        return out;
+    }
+
+    public void setOut(ObjectOutput out) {
+        this.out = out;
+    }
+
+    public ObjectInput getIn() {
+        return in;
+    }
+
+    public void setIn(ObjectInput in) {
+        this.in = in;
     }
 }

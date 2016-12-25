@@ -5,8 +5,18 @@ import streamDecorater.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.regex.Pattern;
 import client.*;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by pkogler on 26/11/2016.
@@ -21,6 +31,9 @@ public class Client {
     private static final String CLIENT_USAGE = "" +
             "Usage:\n\t" +
             "java -jar client <server IP | hostname> <server port>";
+    private SecretKeySpec skeySpec;
+
+    private IvParameterSpec iv;
 
     /**
      * Cient Constructor
@@ -55,6 +68,12 @@ public class Client {
                 System.exit(1);
             }
         }
+        try {
+            this.iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
+            this.skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         // Initiate Socket
         this.initiateClientChat(ipAddr, port);
@@ -78,7 +97,7 @@ public class Client {
         );
         try (
                 Socket socket = new Socket(ipAddr, port);
-                ChatStream stream = new XDDecorator(new SadFaceDecorator(new SmileDecorator(new CoreChatStream(socket))));
+                ChatStream stream = new AESDecorator(new CoreChatStream(socket), this.skeySpec, this.iv)
         ) {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             Object fromServer;
