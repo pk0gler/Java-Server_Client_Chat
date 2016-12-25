@@ -1,10 +1,15 @@
 package server;
 
 import client.Message;
+import streamDecorater.AESDecorator;
+import streamDecorater.Base64Decorator;
 import streamDecorater.ChatStream;
 import streamDecorater.CoreChatStream;
 
-import java.io.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -15,6 +20,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * It will handle the communication with that client
  */
 public class ClientThread extends Thread {
+    private SecretKeySpec skeySpec;
+    private IvParameterSpec iv;
     /**
      * Client
      */
@@ -35,9 +42,9 @@ public class ClientThread extends Thread {
     /**
      * Constructor Client Thread
      *
-     * @param socket Client Socket
+     * @param socket  Client Socket
      * @param usrName Its Username
-     * @param msgs MEssage Queue
+     * @param msgs    MEssage Queue
      */
     public ClientThread(Socket socket, String usrName, ConcurrentLinkedQueue<Message> msgs) {
         this.client = socket;
@@ -48,6 +55,17 @@ public class ClientThread extends Thread {
                         "           New User\t>> " + usrName + " <<\tconnected\n" +
                         "+------------------------------------------------------------+\n"
         );
+
+        /*
+         * Create SecretKeySpec
+         * for later use in AESDecorator
+         */
+        try {
+            this.iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
+            this.skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -66,7 +84,13 @@ public class ClientThread extends Thread {
         try (
                 //ObjectOutput out = new ObjectOutputStream(Client.getOutputStream());
                 //ObjectInput in = new ObjectInputStream(Client.getInputStream())
-                ChatStream stream = new CoreChatStream(client)
+                ChatStream stream =
+                        new Base64Decorator(
+                                new AESDecorator(
+                                        new CoreChatStream(this.client),
+                                        this.skeySpec, this.iv)
+
+                        );
         ) {
 
             Message inputLine, outputLine;

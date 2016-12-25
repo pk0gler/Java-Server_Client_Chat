@@ -2,21 +2,15 @@ package client;
 
 import streamDecorater.*;
 
-import java.io.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.regex.Pattern;
-import client.*;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by pkogler on 26/11/2016.
@@ -31,8 +25,15 @@ public class Client {
     private static final String CLIENT_USAGE = "" +
             "Usage:\n\t" +
             "java -jar client <server IP | hostname> <server port>";
+
+    /**
+     * {@link SecretKeySpec}
+     */
     private SecretKeySpec skeySpec;
 
+    /**
+     * {@link IvParameterSpec}
+     */
     private IvParameterSpec iv;
 
     /**
@@ -59,6 +60,9 @@ public class Client {
             System.exit(1);
         }
 
+        /*
+         * Validate arguments
+         */
         Pattern ip = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
         Pattern hostname = Pattern.compile("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$");
         if (!ipAddr.matches(ip.pattern())) {
@@ -68,6 +72,11 @@ public class Client {
                 System.exit(1);
             }
         }
+
+        /*
+         * Create SecretKeySpec
+         * for later use in AESDecorator
+         */
         try {
             this.iv = new IvParameterSpec("RandomInitVector".getBytes("UTF-8"));
             this.skeySpec = new SecretKeySpec("Bar12345Bar12345".getBytes("UTF-8"), "AES");
@@ -85,25 +94,34 @@ public class Client {
      * specified Server
      *
      * @param ipAddr Server Ip Address
-     * @param port Server Port
+     * @param port   Server Port
      */
     private void initiateClientChat(String ipAddr, int port) {
         System.out.println(
                 "Commands:\n\t\\help -> Show this Message\n\t" +
                         "\\exit -> Close / Disconnect\n\t" +
-                        "\\person -> Create new Person\n\n\t" +
                         "<<>>\t... Server Message\n\t" +
                         "<>\t\t... Client Message\n"
         );
         try (
+                // Generate new Socket
                 Socket socket = new Socket(ipAddr, port);
-                ChatStream stream = new AESDecorator(new CoreChatStream(socket), this.skeySpec, this.iv)
+                // Create Stream
+                // Decorate with varies of streamDecorater.StreamDecorator
+                ChatStream stream =
+                        new SmileDecorator(
+                                new Base64Decorator(
+                                        new AESDecorator(
+                                                new CoreChatStream(socket),
+                                                this.skeySpec, this.iv)
+                                )
+                        );
         ) {
+            // Client input via Console
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            Object fromServer;
             Message fromUser;
 
-            //new MessageThread(in).start();
+            // MessageThread listening on Server output
             new MessageThread(stream).start();
 
             while (true) {
@@ -113,22 +131,10 @@ public class Client {
                     if (fromUser.getMessage().equals("\\exit")) {
                         System.out.println("Ciau");
                         break;
-                    } else if (fromUser.getMessage().equals("\\person")) {
-                        System.out.print("Name:\t\t");
-                        String vname = stdIn.readLine();
-                        System.out.print("Nachname:\t");
-                        String nname = stdIn.readLine();
-                        System.out.println();
-                        Person p = new Person(vname, nname);
-                        //Message<Person> temp = new Message<>(new Message("as"));
-                        Message<Person> temp = new Message<Person>(p);
-                        //out.writeObject(temp);
-                        stream.write(temp);
                     } else if (fromUser.getMessage().equals("\\help")) {
                         System.out.println(
                                 "Commands:\n\t\\help -> Show this Message\n\t" +
                                         "\\exit -> Close / Disconnect\n\t" +
-                                        "\\person -> Create new Person\n\n\t" +
                                         "<<>>\t... Server Message\n\t" +
                                         "<>\t\t... Client Message\n"
                         );

@@ -65,10 +65,10 @@ public class AllocationService extends Thread {
             if (this.msgs.size() != 0) {
                 Message msg = msgs.remove();
                 Server.log(msg);
-                System.out.println(msg);
                 for (Map.Entry<String, ClientThread> entry : this.clients.entrySet()) {
                     entry.getValue().setNewMsg(msg);
                 }
+                System.out.println(msg);
             }
         }
     }

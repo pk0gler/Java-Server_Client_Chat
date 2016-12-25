@@ -5,17 +5,17 @@ import client.Message;
 import java.io.IOException;
 
 /**
- * Created by philippkogler on 27/11/16.
- * Smile ChatStream Decorator
+ * Created by pkogler on 25/12/2016.
  */
-public class SmileDecorator extends StreamDecorator {
+public class HashDecorator extends StreamDecorator {
     private ChatStream inner;
 
     /**
-     * SmileDecorator Constructor
+     * {@link StreamDecorator} Constructor
+     *
      * @param inner
      */
-    public SmileDecorator(ChatStream inner) {
+    public HashDecorator(ChatStream inner) {
         super(inner);
         this.inner = inner;
     }
@@ -25,12 +25,12 @@ public class SmileDecorator extends StreamDecorator {
      * @throws IOException
      * @see ChatStream
      *
-     * Add Smile to Message
+     * Generate Hash with {@link Object}{@link #hashCode()}
      */
     @Override
     public void write(Object o) throws IOException {
         String msg = ((Message<String>) o).getMessage();
-        String res = msg + ":)";
-        this.inner.write(new Message<String>(res));
+        String hashMsg = msg.hashCode()+"";
+        this.inner.write(new Message<String>(hashMsg));
     }
 }
