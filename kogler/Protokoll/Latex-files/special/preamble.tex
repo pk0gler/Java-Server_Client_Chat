@@ -3,8 +3,9 @@
 \usepackage[in]{fullpage}
 % Fontencoding for possible copy&paste out of PDF
 \usepackage[T1]{fontenc}
-\usepackage{times}
+\usepackage{Times}
 \usepackage{enumitem}
+\usepackage{bbding}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{graphicx} 
@@ -69,8 +70,30 @@
 	basicstyle=\scriptsize,
 }
 
-\lstdefinestyle{Java}{
+\lstdefinestyle{JavaL}{
 	language=Java,
+	numbers=left,
+	aboveskip={1\baselineskip},
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+}
+
+\lstdefinestyle{JavaR}{
+	language=Java,
+	numbers=right,
+	aboveskip={1\baselineskip},
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+}
+
+\lstdefinestyle{JavaG}{
+	language=Java,
+	numbers=left,
+	xrightmargin=1.2cm,
 	aboveskip={1\baselineskip},
 	keywordstyle=\color{javapurple}\bfseries,
 	stringstyle=\color{javared},

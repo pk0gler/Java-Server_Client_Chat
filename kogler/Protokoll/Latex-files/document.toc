@@ -3,41 +3,15 @@
 \contentsline {subsection}{\numberline {1.1}Ziele}{1}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}Voraussetzungen}{1}{subsection.1.2}
 \contentsline {subsection}{\numberline {1.3}Aufgabenstellung}{1}{subsection.1.3}
-\contentsline {section}{\numberline {2}Allgemein - Stored Routines MySQL}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Stored Procedures}{2}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}Syntax}{3}{subsubsection.2.1.1}
-\contentsline {subsection}{\numberline {2.2}Stored Functions}{3}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Syntax}{4}{subsubsection.2.2.1}
-\contentsline {section}{\numberline {3}Vorbereitung}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}Anpassen des Create - Scripts}{5}{subsection.3.1}
-\contentsline {section}{\numberline {4}Ergebnisse}{5}{section.4}
-\contentsline {subsection}{\numberline {4.1}AU01 - \textit {preisTo99()} \& \textit {loescheRechnung()}}{5}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Umsetzung - \textit {preisTo99()}}{5}{subsubsection.4.1.1}
-\contentsline {subsubsection}{\numberline {4.1.2}Umsetzung - \textit {loescheRechnung()}}{6}{subsubsection.4.1.2}
-\contentsline {subsubsection}{\numberline {4.1.3}Bemerkungen}{6}{subsubsection.4.1.3}
-\contentsline {subsubsection}{\numberline {4.1.4}Screenshots}{6}{subsubsection.4.1.4}
-\contentsline {subsection}{\numberline {4.2}AU02 - \textit {preiserhoehung()}}{7}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Umsetzung - \textit {preiserhoehung()}}{7}{subsubsection.4.2.1}
-\contentsline {subsubsection}{\numberline {4.2.2}Bemerkungen}{7}{subsubsection.4.2.2}
-\contentsline {subsubsection}{\numberline {4.2.3}Screenshots}{7}{subsubsection.4.2.3}
-\contentsline {subsection}{\numberline {4.3}AU03 - Tagesumsatz je Kellner}{8}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}Benoetigte Inserts}{8}{subsubsection.4.3.1}
-\contentsline {subsubsection}{\numberline {4.3.2}Umsetzung - \textit {kellnerUmsatz()}}{8}{subsubsection.4.3.2}
-\contentsline {subsubsection}{\numberline {4.3.3}Bemerkungen}{8}{subsubsection.4.3.3}
-\contentsline {subsubsection}{\numberline {4.3.4}Screenshots}{9}{subsubsection.4.3.4}
-\contentsline {subsection}{\numberline {4.4}AU04 - Mehrwehrtssteuer}{10}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Umsetzung - \textit {mwst()}}{10}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}Bemerkungen}{10}{subsubsection.4.4.2}
-\contentsline {subsubsection}{\numberline {4.4.3}Screenshots}{10}{subsubsection.4.4.3}
-\contentsline {subsection}{\numberline {4.5}AU05 - Noch nie bestellt}{11}{subsection.4.5}
-\contentsline {subsubsection}{\numberline {4.5.1}Umsetzung - \textit {mwst()}}{11}{subsubsection.4.5.1}
-\contentsline {subsubsection}{\numberline {4.5.2}Bemerkungen}{11}{subsubsection.4.5.2}
-\contentsline {subsubsection}{\numberline {4.5.3}Screenshots}{11}{subsubsection.4.5.3}
-\contentsline {subsection}{\numberline {4.6}AU06 - Kellnerdaten}{12}{subsection.4.6}
-\contentsline {subsubsection}{\numberline {4.6.1}Umsetzung - \textit {kellnerdaten()}}{12}{subsubsection.4.6.1}
-\contentsline {subsubsection}{\numberline {4.6.2}Bemerkungen}{12}{subsubsection.4.6.2}
-\contentsline {subsubsection}{\numberline {4.6.3}Screenshots}{13}{subsubsection.4.6.3}
-\contentsline {subsection}{\numberline {4.7}AU07 - Tagesumsatz aller Kellner}{14}{subsection.4.7}
-\contentsline {subsubsection}{\numberline {4.7.1}Umsetzung - \textit {tagesumsatz\_pro\_kellner()}}{14}{subsubsection.4.7.1}
-\contentsline {subsubsection}{\numberline {4.7.2}Bemerkungen}{14}{subsubsection.4.7.2}
-\contentsline {subsubsection}{\numberline {4.7.3}Screenshots}{15}{subsubsection.4.7.3}
+\contentsline {section}{\numberline {2}Architektur - A09 Server-Client-Chat}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Aufgabenstellung}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Umsetzung}{2}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}UML - Klassendiagramm}{2}{subsubsection.2.2.1}
+\contentsline {paragraph}{\textit {ChatStream} - Komponente}{3}{section*.5}
+\contentsline {paragraph}{\textit {CoreChatStream} - Konkrete Komponente}{3}{section*.6}
+\contentsline {paragraph}{\textit {StreamDecorator} - Decorator Komponente}{4}{section*.7}
+\contentsline {paragraph}{\textit {AES/Base64... - Decorator} - Die Decorator Komponenten}{5}{section*.8}
+\contentsline {paragraph}{Aufruf / Erstellen eines Stream-Decorators}{5}{section*.9}
+\contentsline {section}{\numberline {3}Design - Patterns Allgemein}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Klassifizierung Design-Patterns \cite {wiki1}}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Warum werden Deisgn-Patterns verwendet ?}{7}{subsection.3.2}
